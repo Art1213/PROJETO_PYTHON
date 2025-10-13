@@ -63,8 +63,6 @@ jobs:
       # 3. Configurar Helm
       - name: Configurar Helm
         uses: azure/setup-helm@v3
-        with:
-          version: 'v1.29.0'
 
       # 4. Login no cluster (exemplo Minikube ou Kind)
       - name: Login no cluster
