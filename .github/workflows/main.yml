@@ -1,0 +1,47 @@
+name: CI/CD Pipeline - DevOps App
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Clonar o repositório
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      # 2. Configurar o Python
+      - name: Configurar ambiente Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # 3. Instalar dependências e rodar testes
+      - name: Instalar dependências
+        run: pip install -r requirements.txt
+
+      - name: Executar testes
+        run: pytest -v
+
+      # 4. Fazer build da imagem Docker
+      - name: Build da imagem Docker
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ github.run_number }} .
+
+      # 5. Login no Docker Hub
+      - name: Login no Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # 6. Push da imagem para o Docker Hub
+      - name: Push da imagem para o Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ github.run_number }}
+          docker tag ${{ secrets.DOCKER_USERNAME }}/devops-app:${{ github.run_number }} ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/devops-app:latest
