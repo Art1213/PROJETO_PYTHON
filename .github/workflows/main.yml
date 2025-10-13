@@ -69,6 +69,7 @@ jobs:
       # 4. Login no cluster (exemplo Minikube ou Kind)
       - name: Login no cluster
         run: |
+          mkdir -p $HOME/.kube
           echo "$KUBECONFIG_CONTENT" > $HOME/.kube/config
           export KUBECONFIG=$HOME/.kube/config
 
