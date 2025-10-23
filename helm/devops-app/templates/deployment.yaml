@@ -13,7 +13,7 @@ spec:
         app: {{ include "devops-app.name" . }}
     spec:
       containers:
-        - name: devops-app
+        - name: {{ include "devops-app.name" . }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:

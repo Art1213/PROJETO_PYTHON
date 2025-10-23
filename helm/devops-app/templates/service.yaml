@@ -4,9 +4,12 @@ metadata:
   name: {{ include "devops-app.fullname" . }}
 spec:
   type: {{ .Values.service.type }}
-  ports:
-    - port: {{ .Values.service.port }}
-      targetPort: 5000
-      nodePort: {{ .Values.service.nodePort }}
   selector:
     app: {{ include "devops-app.name" . }}
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.port }}
+      targetPort: 5000
+      {{- if .Values.service.nodePort }}
+      nodePort: {{ .Values.service.nodePort }}
+      {{- end }}
