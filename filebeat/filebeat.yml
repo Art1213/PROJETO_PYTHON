@@ -1,0 +1,18 @@
+filebeat.inputs:
+  - type: filestream
+    id: python-logs
+    enabled: true
+    paths:
+      - /usr/share/filebeat/logs/*.log
+    fields:
+      source: python-app
+    fields_under_root: true
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+  index: "python-logs-%{+yyyy.MM.dd}"
+
+setup.template.enabled: false
+setup.ilm.enabled: false
+
+logging.to_files: false
